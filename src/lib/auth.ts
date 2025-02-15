@@ -16,3 +16,5 @@ export const auth = betterAuth({
   }),
   plugins: [organization(), admin(), openAPI()],
 });
+
+export type Session = typeof auth.$Infer.Session;
