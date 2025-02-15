@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
-import { auth } from "@/lib/auth";
 import authRoutes from "@/features/auth/server/route";
 
 const app = new Hono().basePath("/api");
@@ -9,12 +8,7 @@ const app = new Hono().basePath("/api");
 // Define Routes
 const routes = app
   // Auth Routes
-  .route("/auth", authRoutes)
-
-  // Test Routes
-  .get("/hello", (c) => {
-    return c.json({ hello: "World" });
-  });
+  .route("/auth", authRoutes);
 
 // RPC App Type
 export type AppType = typeof routes;
