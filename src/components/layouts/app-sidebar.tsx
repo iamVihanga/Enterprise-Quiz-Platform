@@ -80,8 +80,8 @@ const data = {
       icon: LibraryBigIcon,
     },
     {
-      title: "Quizes",
-      url: "/dashboard/quizes",
+      title: "Quizzes",
+      url: "/dashboard/quizzes",
       icon: FileQuestionIcon,
     },
   ],

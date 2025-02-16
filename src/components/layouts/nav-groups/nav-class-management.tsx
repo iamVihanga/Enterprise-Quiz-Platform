@@ -11,6 +11,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function NavClassManagement({
   cmLinks,
@@ -22,6 +23,7 @@ export function NavClassManagement({
   }[];
 }) {
   const { isMobile } = useSidebar();
+  const pathname = usePathname();
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -29,7 +31,7 @@ export function NavClassManagement({
       <SidebarMenu>
         {cmLinks.map((item) => (
           <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton asChild isActive={pathname === item.url}>
               <Link href={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
