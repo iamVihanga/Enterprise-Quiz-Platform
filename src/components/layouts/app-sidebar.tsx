@@ -3,23 +3,19 @@
 import * as React from "react";
 import {
   AudioWaveform,
-  BookOpen,
-  Bot,
-  CircleDollarSignIcon,
   Command,
-  DollarSignIcon,
-  Frame,
   GalleryVerticalEnd,
-  Map,
-  PieChart,
   Settings2,
-  SquareTerminal,
-  UserCog2Icon,
+  GraduationCapIcon,
+  UsersIcon,
+  LayoutDashboard,
+  BookOpenIcon,
+  LibraryBigIcon,
+  FileQuestionIcon,
 } from "lucide-react";
 
-import { NavMain } from "@/components/layouts/nav-main";
-import { NavProjects } from "@/components/layouts/nav-projects";
-import { NavUser } from "@/components/layouts/nav-user";
+import { NavMain } from "@/components/layouts/nav-groups/nav-main";
+import { NavUser } from "@/components/layouts/nav-groups/nav-user";
 import { TeamSwitcher } from "@/components/layouts/team-switcher";
 import {
   Sidebar,
@@ -30,15 +26,12 @@ import {
 } from "@/components/ui/sidebar";
 
 import { type Session } from "@/lib/auth";
-import { NavAdmins } from "./nav-admin";
+import { NavClassManagement } from "./nav-groups/nav-class-management";
+import { NavContent } from "./nav-groups/nav-content";
+import { NavSettings } from "./nav-groups/nav-settings";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "Acme Inc",
@@ -58,56 +51,55 @@ const data = {
   ],
   navMain: [
     {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: LayoutDashboard,
+    },
+  ],
+  classManagement: [
+    {
+      name: "Classes",
+      url: "/dashboard/classes",
+      icon: GraduationCapIcon,
+    },
+    {
+      name: "Students",
+      url: "/dashboard/students",
+      icon: UsersIcon,
+    },
+  ],
+  content: [
+    {
+      title: "Lessons",
+      url: "/dashboard/lessons",
+      icon: BookOpenIcon,
+    },
+    {
+      title: "Materials",
+      url: "/dashboard/materials",
+      icon: LibraryBigIcon,
+    },
+    {
+      title: "Quizes",
+      url: "/dashboard/quizes",
+      icon: FileQuestionIcon,
+    },
+  ],
+  settings: [
+    {
       title: "Settings",
-      url: "#",
+      url: "/dashboard/settings",
       icon: Settings2,
       items: [
         {
           title: "General",
-          url: "#",
+          url: "/dashboard/settings",
         },
         {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "/dashboard/billing",
-        },
-        {
-          title: "Limits",
+          title: "System",
           url: "#",
         },
       ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-  admin: [
-    {
-      name: "User Management",
-      url: "/dashboard/manage-users",
-      icon: UserCog2Icon,
-    },
-    {
-      name: "Subscription Plans",
-      url: "/dashboard/manage-plans",
-      icon: DollarSignIcon,
     },
   ],
 };
@@ -122,10 +114,12 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
-        {props.session.user.role === "admin" && (
-          <NavAdmins adminLinks={data.admin} />
-        )}
+
+        <NavClassManagement cmLinks={data.classManagement} />
+
+        <NavContent items={data.content} />
+
+        <NavSettings items={data.settings} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser

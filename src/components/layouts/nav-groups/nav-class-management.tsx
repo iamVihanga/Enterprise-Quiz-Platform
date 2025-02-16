@@ -10,11 +10,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
-export function NavAdmins({
-  adminLinks,
+export function NavClassManagement({
+  cmLinks,
 }: {
-  adminLinks: {
+  cmLinks: {
     name: string;
     url: string;
     icon: LucideIcon;
@@ -24,15 +25,15 @@ export function NavAdmins({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Admin</SidebarGroupLabel>
+      <SidebarGroupLabel>Class Management</SidebarGroupLabel>
       <SidebarMenu>
-        {adminLinks.map((item) => (
+        {cmLinks.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <Link href={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}
