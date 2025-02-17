@@ -5,6 +5,7 @@ import authRoutes from "@/features/auth/server/route";
 import classesRoutes from "@/features/classes/server/route";
 import studentsRoutes from "@/features/students/server/route";
 import adminsRoutes from "@/features/admins/server/route";
+import userRoutes from "@/features/users/server/route";
 
 const app = new Hono().basePath("/api");
 
@@ -16,7 +17,10 @@ const routes = app
   // Class Management Routes
   .route("/classes", classesRoutes)
   .route("/students", studentsRoutes)
-  .route("/admins", adminsRoutes);
+  .route("/admins", adminsRoutes)
+
+  // Admin Settings Routes
+  .route("/users", userRoutes);
 
 // RPC App Type
 export type AppType = typeof routes;

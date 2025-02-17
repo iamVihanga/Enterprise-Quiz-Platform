@@ -64,7 +64,7 @@ export function SignupForm({ className }: Props) {
             });
 
             form.reset();
-            redirect("/signin");
+            redirect("/dashboard");
           },
           onError: (ctx) => {
             toast.error("Signup failed !", {
