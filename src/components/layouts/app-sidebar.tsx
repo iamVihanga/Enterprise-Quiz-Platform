@@ -16,7 +16,6 @@ import {
 
 import { NavMain } from "@/components/layouts/nav-groups/nav-main";
 import { NavUser } from "@/components/layouts/nav-groups/nav-user";
-import { TeamSwitcher } from "@/components/layouts/team-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -29,6 +28,8 @@ import { type Session } from "@/lib/auth";
 import { NavClassManagement } from "./nav-groups/nav-class-management";
 import { NavContent } from "./nav-groups/nav-content";
 import { NavSettings } from "./nav-groups/nav-settings";
+
+import { ClassSwitcher } from "@/features/classes/components/class-switcher";
 
 // This is sample data.
 const data = {
@@ -110,7 +111,7 @@ export function AppSidebar({
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <ClassSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

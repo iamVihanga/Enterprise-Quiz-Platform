@@ -3,6 +3,7 @@
 import React from "react";
 import { ThemeProvider } from "./theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 type Props = {
   children: React.ReactNode;
@@ -21,7 +22,7 @@ export default function Providers({ children }: Props) {
         disableTransitionOnChange
       >
         <QueryClientProvider client={queryClient}>
-          {children}
+          <NuqsAdapter>{children}</NuqsAdapter>
         </QueryClientProvider>
       </ThemeProvider>
     </div>

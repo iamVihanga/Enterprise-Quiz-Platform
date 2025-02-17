@@ -1,4 +1,3 @@
-import { SignoutButton } from "@/features/auth/components/signout-button";
 import React from "react";
 
 type Props = {};

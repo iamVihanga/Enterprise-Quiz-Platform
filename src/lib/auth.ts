@@ -24,7 +24,16 @@ export const auth = betterAuth({
     provider: "pg",
     schema: authSchema,
   }),
-  plugins: [organization(), admin(), openAPI()],
+  plugins: [
+    organization({
+      allowUserToCreateOrganization(user) {
+        const isAdmin = (user as any)?.role === "admin";
+        return isAdmin;
+      },
+    }),
+    admin(),
+    openAPI(),
+  ],
 });
 
 export type Session = typeof auth.$Infer.Session;
