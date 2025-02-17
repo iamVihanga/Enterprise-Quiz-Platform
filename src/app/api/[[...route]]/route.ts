@@ -3,6 +3,8 @@ import { handle } from "hono/vercel";
 
 import authRoutes from "@/features/auth/server/route";
 import classesRoutes from "@/features/classes/server/route";
+import studentsRoutes from "@/features/students/server/route";
+import adminsRoutes from "@/features/admins/server/route";
 
 const app = new Hono().basePath("/api");
 
@@ -10,7 +12,11 @@ const app = new Hono().basePath("/api");
 const routes = app
   // Auth Routes
   .route("/auth", authRoutes)
-  .route("/classes", classesRoutes);
+
+  // Class Management Routes
+  .route("/classes", classesRoutes)
+  .route("/students", studentsRoutes)
+  .route("/admins", adminsRoutes);
 
 // RPC App Type
 export type AppType = typeof routes;

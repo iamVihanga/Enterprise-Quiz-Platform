@@ -11,10 +11,10 @@ import { authClient } from "@/features/auth/auth-client";
 import { AddNewClass } from "@/features/classes/components/add-new-class-modal";
 import { ClassSwitcher } from "@/features/classes/components/class-switcher";
 
-import StudentListing from "@/features/students/components/student-listing";
-import { StudentsTableActions } from "@/features/students/components/students-table/student-table-actions";
+import AdminsListing from "@/features/admins/components/admin-listing";
+import { AdminsTableActions } from "@/features/admins/components/admins-table/admin-table-actions";
 
-export default function StudentsPage() {
+export default function AdminsPage() {
   const {
     data: activeOrgData,
     error: activeOrgErr,
@@ -37,7 +37,7 @@ export default function StudentsPage() {
             <ListTodoIcon className="size-8 text-white" />
           </div>
           <h1 className="mt-5 font-heading text-2xl font-semibold">
-            Select class to Manage students
+            Select class to Manage admins
           </h1>
           <p className="text-xs mt-1 text-foreground/60">
             You can select class with sidebar class switcher or following
@@ -60,8 +60,8 @@ export default function StudentsPage() {
     <PageContainer scrollable={false}>
       <div className="flex flex-1 flex-col space-y-4">
         <AppPageShell
-          title="Manage Students"
-          description={`Manage students in "${activeOrgData.name}"`}
+          title="Manage Admins"
+          description={`Manage admins in "${activeOrgData.name}"`}
           actionComponent={
             <div className="w-fit rounded-lg">
               <ClassSwitcher />
@@ -71,9 +71,9 @@ export default function StudentsPage() {
 
         <Separator />
 
-        <StudentsTableActions />
+        <AdminsTableActions />
 
-        <StudentListing />
+        <AdminsListing />
       </div>
     </PageContainer>
   );

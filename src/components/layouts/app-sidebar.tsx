@@ -12,6 +12,7 @@ import {
   BookOpenIcon,
   LibraryBigIcon,
   FileQuestionIcon,
+  ShieldIcon,
 } from "lucide-react";
 
 import { NavMain } from "@/components/layouts/nav-groups/nav-main";
@@ -67,6 +68,11 @@ const data = {
       name: "Students",
       url: "/dashboard/students",
       icon: UsersIcon,
+    },
+    {
+      name: "Admins",
+      url: "/dashboard/admins",
+      icon: ShieldIcon,
     },
   ],
   content: [
