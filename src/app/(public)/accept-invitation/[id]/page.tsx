@@ -3,12 +3,13 @@
 import React, { useState, useEffect, useId } from "react";
 import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader, XIcon } from "lucide-react";
+import { ArrowLeft, Loader, Shield, XIcon } from "lucide-react";
 import Link from "next/link";
 
 import { authClient } from "@/features/auth/auth-client";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 export default function AcceptInvitePage() {
   const params = useParams<{ id: string }>();
@@ -118,8 +119,18 @@ export default function AcceptInvitePage() {
   return (
     <div className="mt-3 flex items-center justify-center flex-col gap-3">
       <div className="size-12 bg-primary rounded-xl flex items-center justify-center text-lg text-primary-foreground">
-        {invitation?.organizationName?.slice(0, 2)}
+        {invitation?.role !== "admin" ? (
+          invitation?.organizationName?.slice(0, 2)
+        ) : (
+          <Shield className="size-6" />
+        )}
       </div>
+
+      {invitation?.role === "admin" && (
+        <Badge className="bg-green-500/10 border border-green-500 hover:bg-green-500/10 text-green-500 px-2">
+          Class Admin Invitation
+        </Badge>
+      )}
 
       <div className="text-center space-y-1">
         <h1 className="text-xl font-semibold">
