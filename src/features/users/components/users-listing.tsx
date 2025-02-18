@@ -18,8 +18,6 @@ export default function StudentsListing() {
     search: searchQuery,
   });
 
-  console.log(data, error, isPending);
-
   if (isPending) {
     return <DataTableSkeleton columnCount={columns.length} rowCount={4} />;
   }

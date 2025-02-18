@@ -12,7 +12,7 @@ export const useGetAdmins = (params: FilterParams) => {
   const { page = 1, limit = 10, search = "" } = params;
 
   const query = useQuery({
-    queryKey: ["students", { page, limit, search }],
+    queryKey: ["admins", { page, limit, search }],
     queryFn: async () => {
       const queryParams = {
         page: page.toString(),
@@ -20,7 +20,7 @@ export const useGetAdmins = (params: FilterParams) => {
         ...(search && { search }),
       };
 
-      const response = await client.api.students.$get({
+      const response = await client.api.admins.$get({
         query: queryParams,
       });
 

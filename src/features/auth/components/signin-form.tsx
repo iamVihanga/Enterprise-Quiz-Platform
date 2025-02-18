@@ -29,9 +29,13 @@ import { toast } from "sonner";
 
 type Props = {
   className?: string;
+  invitationPage?: boolean;
 };
 
-export default function SigninForm({ className }: Props) {
+export default function SigninForm({
+  className,
+  invitationPage = false,
+}: Props) {
   const [isPending, startSigninAction] = useTransition();
   const searchParams = useSearchParams();
   const toastId = useId();
@@ -63,7 +67,11 @@ export default function SigninForm({ className }: Props) {
               id: toastId,
               description: "",
             });
-            router.push(redirectTo ? `${redirectTo}` : "/dashboard");
+
+            if (!invitationPage) {
+              router.push(redirectTo ? `${redirectTo}` : "/dashboard");
+            }
+
             router.refresh();
           },
           onError: (ctx) => {
@@ -134,13 +142,17 @@ export default function SigninForm({ className }: Props) {
         </Button>
       </div>
 
-      <Separator />
+      {!invitationPage && (
+        <>
+          <Separator />
 
-      {/* Auth Provider Buttons */}
-      <div className="flex flex-col space-y-4">
-        <GoogleAuthButton mode="login" />
-        <AppleAuthButton mode="login" />
-      </div>
+          {/* Auth Provider Buttons */}
+          <div className="flex flex-col space-y-4">
+            <GoogleAuthButton mode="login" />
+            <AppleAuthButton mode="login" />
+          </div>
+        </>
+      )}
     </div>
   );
 }

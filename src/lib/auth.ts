@@ -30,6 +30,16 @@ export const auth = betterAuth({
         const isAdmin = (user as any)?.role === "admin";
         return isAdmin;
       },
+
+      async sendInvitationEmail(data, request) {
+        const inviteLink = `${process.env.SITE_URL}/accept-invitation/${data.id}`;
+
+        console.log({ inviteLink });
+
+        // TODO: implement sending email functionality
+
+        // TODO: Implement sending notification functionality
+      },
     }),
     admin(),
     openAPI(),
