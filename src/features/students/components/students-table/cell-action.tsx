@@ -1,7 +1,7 @@
 "use client";
 
-import { useId, useState } from "react";
-import { Edit, MoreHorizontal, Trash, TrashIcon } from "lucide-react";
+import { useState } from "react";
+import { LogOutIcon, MoreHorizontal, TrashIcon } from "lucide-react";
 
 import {
   AlertDialog,
@@ -23,39 +23,39 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Student } from "./columns";
-// import { useDeleteClass } from "../../api/use-delete-class";
-// import { UpdateClassSheet } from "../update-class-sheet";
+import { useRemoveStudent } from "../../api/use-remove-student";
 
 interface CellActionProps {
   data: Student;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  // const { mutate, isPending } = useDeleteClass();
+  const { mutate, isPending } = useRemoveStudent();
   const [open, setOpen] = useState(false);
-  const [isUpdateOpen, setUpdateOpen] = useState(false);
 
-  const onConfirm = () => {
-    // mutate(data);
+  const onConfirm = async () => {
+    mutate(
+      {
+        memberId: data.id,
+      },
+      {
+        onSuccess: () => {
+          setOpen(false);
+        },
+      }
+    );
   };
 
   return (
     <>
-      {/* Update Sheet */}
-      {/* <UpdateClassSheet
-        open={isUpdateOpen}
-        setOpen={setUpdateOpen}
-        updateClassId={data.id}
-      /> */}
-
       {/* Alert Dialog */}
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete created
-              class and remove data from our servers.
+              With this action, Student will be removed from selected class. You
+              can add them again by inviting them.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -63,8 +63,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <AlertDialogAction asChild>
               <Button
                 onClick={onConfirm}
-                // loading={isPending}
-                // disabled={isPending}
+                loading={isPending}
+                disabled={isPending}
                 icon={<TrashIcon className="size-4" />}
               >
                 Delete
@@ -84,13 +84,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          {/* Update Sheet */}
-          <DropdownMenuItem onClick={() => setUpdateOpen(true)}>
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
-
           <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
+            <LogOutIcon className="mr-2 h-4 w-4" /> Remove Student
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
