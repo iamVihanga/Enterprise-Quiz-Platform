@@ -3,7 +3,6 @@ import SigninForm from "@/features/auth/components/signin-form";
 import React from "react";
 
 export default function SigninPage() {
-  console.log("Login page");
   return (
     <div className="space-y-6 flex flex-col items-center">
       <Logo />

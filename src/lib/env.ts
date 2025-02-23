@@ -18,6 +18,11 @@ const envSchema = z.object({
   APPLE_CLIENT_SECRET: z.string().min(1),
 
   UPLOADTHING_TOKEN: z.string().min(1),
+
+  NEXT_PUBLIC_AWS_REGION: z.string().min(1),
+  NEXT_PUBLIC_AWS_ACCESS_KEY_ID: z.string().min(1),
+  NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY: z.string().min(1),
+  NEXT_PUBLIC_AWS_S3_BUCKET: z.string().min(1),
 });
 
 const env = envSchema.parse(process.env);

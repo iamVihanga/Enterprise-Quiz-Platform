@@ -121,6 +121,7 @@ export function AddNewClass() {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="image"
