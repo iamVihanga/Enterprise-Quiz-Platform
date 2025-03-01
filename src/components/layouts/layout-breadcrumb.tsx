@@ -28,7 +28,9 @@ export function LayoutBreadcrumb() {
         <BreadcrumbItem className="hidden md:block">
           <BreadcrumbLink
             href={`/${pathList[0]}`}
-            className={pathList.length === 1 ? "text-white" : ""}
+            className={
+              pathList.length === 1 ? "dark:text-white text-black" : ""
+            }
           >
             {pathListFormatted[0]}
           </BreadcrumbLink>
@@ -42,7 +44,11 @@ export function LayoutBreadcrumb() {
               <BreadcrumbItem>
                 <BreadcrumbLink
                   href={`/${pathList[0]}/${path}`}
-                  className={pathList.length === index + 2 ? "text-white" : ""}
+                  className={
+                    pathList.length === index + 2
+                      ? "dark:text-white text-black"
+                      : ""
+                  }
                 >
                   {pathListFormatted[index + 1]}
                 </BreadcrumbLink>

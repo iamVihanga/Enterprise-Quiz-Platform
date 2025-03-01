@@ -1,8 +1,13 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { organization, admin, openAPI } from "better-auth/plugins";
+import {
+  organization,
+  admin as adminPlugin,
+  openAPI,
+} from "better-auth/plugins";
 
 import * as authSchema from "@/features/auth/schema/auth-schema";
+import { ac, member, admin, owner } from "@/features/auth/permissions";
 
 import { db } from "@/db";
 
@@ -26,6 +31,13 @@ export const auth = betterAuth({
   }),
   plugins: [
     organization({
+      ac: ac,
+      roles: {
+        member,
+        admin,
+        owner,
+      },
+
       allowUserToCreateOrganization(user) {
         const isAdmin = (user as any)?.role === "admin";
         return isAdmin;
@@ -41,7 +53,7 @@ export const auth = betterAuth({
         // TODO: Implement sending notification functionality
       },
     }),
-    admin(),
+    adminPlugin(),
     openAPI(),
   ],
 });

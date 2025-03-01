@@ -37,7 +37,7 @@ export default function StudentsPage() {
             <ListTodoIcon className="size-8 text-white" />
           </div>
           <h1 className="mt-5 font-heading text-2xl font-semibold">
-            Select class to Manage students
+            Select class to manage students
           </h1>
           <p className="text-xs mt-1 text-foreground/60">
             You can select class with sidebar class switcher or following

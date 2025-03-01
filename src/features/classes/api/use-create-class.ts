@@ -37,7 +37,7 @@ export const useCreateClass = () => {
         uploadResult = await upload({
           file: imageFile,
           type: type,
-          path: MediaUploadPaths.ORGANIZATION,
+          path: MediaUploadPaths.ORGANIZATIONS,
         });
       }
 

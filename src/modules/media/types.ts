@@ -16,6 +16,7 @@ export interface UploadParams {
 }
 
 export enum MediaUploadPaths {
-  ORGANIZATION = "organization",
-  USERS = "users",
+  ORGANIZATIONS = "organizations",
+  PROFILE_IMAGES = "profile_images",
+  LESSON_THUMBNAILS = "lessons/thumbnails",
 }
