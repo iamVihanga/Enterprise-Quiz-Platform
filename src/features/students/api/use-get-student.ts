@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
+import { authClient } from "@/features/auth/auth-client";
 
 interface FilterParams {
   page?: number;
@@ -9,10 +10,11 @@ interface FilterParams {
 }
 
 export const useGetStudents = (params: FilterParams) => {
+  const activeOrganization = authClient.useActiveOrganization();
   const { page = 1, limit = 10, search = "" } = params;
 
   const query = useQuery({
-    queryKey: ["students", { page, limit, search }],
+    queryKey: ["students", { page, limit, search, activeOrganization }],
     queryFn: async () => {
       const queryParams = {
         page: page.toString(),

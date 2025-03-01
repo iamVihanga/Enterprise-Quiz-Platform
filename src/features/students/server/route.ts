@@ -5,6 +5,8 @@ import { db } from "@/db";
 import { user as userSchema, member as memberSchema } from "@/db/schema/index";
 
 import { sessionMiddleware } from "@/features/auth/middlewares/session-middleware";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 type QueryParams = {
   page?: string;
@@ -16,8 +18,20 @@ const app = new Hono().get("/", sessionMiddleware, async (c) => {
   const user = c.get("user");
   const session = c.get("session");
 
-  if (!user || user?.role !== "admin") {
-    return c.json({ error: "Unauthorized" }, 401);
+  if (user?.role !== "admin") {
+    // Check permission
+    const hasPermission = await auth.api.hasPermission({
+      headers: await headers(),
+      body: {
+        permission: {
+          member: ["create", "delete", "update"],
+        },
+      },
+    });
+
+    if (!hasPermission || !hasPermission.success) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
   }
 
   const activeOrganizationId = session?.activeOrganizationId;
