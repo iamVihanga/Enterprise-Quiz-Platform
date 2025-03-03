@@ -11,6 +11,7 @@ import { auth } from "@/lib/auth";
 import {
   addLessonSchema,
   deleteLessonSchema,
+  findByIdLessonSchema,
 } from "@/features/lessons/schemas/zod-lesson-schema";
 
 type QueryParams = {
@@ -21,7 +22,7 @@ type QueryParams = {
 
 const app = new Hono()
   /**
-   * Fetch all lessons
+   * Fetch all lessons  (GET: /)
    */
   .get("/", sessionMiddleware, async (c) => {
     try {
@@ -64,7 +65,11 @@ const app = new Hono()
 
       // Add search condition if search parameter exists
       if (search) {
-        const searchCondition = and(ilike(lessonsSchema.name, `%${search}%`));
+        const searchCondition = and(
+          ilike(lessonsSchema.name, `%${search}%`),
+          eq(lessonsSchema.organizationId, activeOrganizationId)
+        );
+
         countQuery.where(searchCondition);
         itemsQuery.where(searchCondition);
       }
@@ -98,7 +103,50 @@ const app = new Hono()
   })
 
   /**
-   * Create new lesson
+   * Fetch lesson by ID (GET: /:id)
+   */
+  .get(
+    "/:id",
+    sessionMiddleware,
+    zValidator("param", findByIdLessonSchema),
+    async (c) => {
+      try {
+        // Validate lesson id
+        const lesson_id = parseInt(c.req.param("id"));
+
+        if (!lesson_id) {
+          return c.json({ error: "Lesson ID is required" }, 400);
+        }
+
+        // Get active organization
+        const activeOrganizationId = c.get("session")?.activeOrganizationId;
+
+        if (!activeOrganizationId) {
+          return c.json(
+            { error: "You must have an active organization to fetch lessons" },
+            403
+          );
+        }
+
+        // Fetch lesson by ID
+        const itemsQuery = db
+          .select()
+          .from(lessonsSchema)
+          .where(eq(lessonsSchema.id, lesson_id))
+          .$dynamic();
+
+        const lesson = await itemsQuery;
+
+        return c.json({ data: lesson }, 200);
+      } catch (err) {
+        const error = err as Error;
+        return c.json({ error: error.message }, 500);
+      }
+    }
+  )
+
+  /**
+   * Create new lesson (POST: /)
    */
   .post(
     "/",
@@ -147,7 +195,55 @@ const app = new Hono()
   )
 
   /**
-   * Delete lesson
+   * Update lesson by ID (PUT: /:id)
+   */
+  .put(
+    "/:id",
+    zValidator("form", addLessonSchema),
+    sessionMiddleware,
+    async (c) => {
+      const lesson_id = parseInt(c.req.param("id"));
+
+      if (!lesson_id) {
+        return c.json({ error: "Lesson ID is required" }, 400);
+      }
+
+      // Check user has permission to create lesson
+      const hasPermission = await auth.api.hasPermission({
+        headers: await headers(),
+        body: {
+          permission: {
+            lesson: ["update"],
+          },
+        },
+      });
+
+      if (hasPermission.error || !hasPermission.success) {
+        return c.json(
+          { error: "You don't have permission to update lessons" },
+          403
+        );
+      }
+
+      const validformData = c.req.valid("form");
+
+      // Create new lesson with server-managed fields
+      const now = new Date();
+
+      const lesson = await db
+        .update(lessonsSchema)
+        .set({
+          ...validformData,
+          updatedAt: now,
+        })
+        .where(eq(lessonsSchema.id, lesson_id));
+
+      return c.json({ data: lesson }, 200);
+    }
+  )
+
+  /**
+   * Delete lesson by ID (DELETE: /:id)
    */
   .delete(
     "/:id",

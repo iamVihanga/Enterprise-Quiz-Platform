@@ -23,11 +23,16 @@ export function useLessonsGridFilters() {
     searchParams.limit.withDefault(10)
   );
 
+  const [updateId, setUpdateId] = useQueryState(
+    "update_id",
+    searchParams.updateId.withDefault("")
+  );
+
   const resetFilters = useCallback(() => {
     setSearchQuery(null);
-
     setPage(1);
     setLimit(10);
+    setUpdateId(null);
   }, [setSearchQuery, setPage]);
 
   const isAnyFilterActive = useMemo(() => {
@@ -48,5 +53,9 @@ export function useLessonsGridFilters() {
     // Reset
     resetFilters,
     isAnyFilterActive,
+
+    // Update
+    updateId,
+    setUpdateId,
   };
 }

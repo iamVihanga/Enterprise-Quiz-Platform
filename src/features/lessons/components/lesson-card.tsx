@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
 import { EditIcon, MoreHorizontal, TrashIcon } from "lucide-react";
@@ -19,6 +21,7 @@ import {
 
 import { useDeleteLesson } from "@/features/lessons/api/use-delete-lesson";
 import { LessonsAuthContext } from "../lessons-auth-context";
+import { useLessonsGridFilters } from "./lessons-grid/use-lessons-grid-filters";
 
 type Props = {
   lesson: SelectLesson;
@@ -29,6 +32,7 @@ export function LessonCard({ lesson, authContext }: Props) {
   const role = "error" in authContext ? null : authContext.activeMember?.role;
   const permissions = "error" in authContext ? null : authContext.permissions;
 
+  const { setUpdateId } = useLessonsGridFilters();
   const { mutate: deleteMutate, isPending: isDeleting } = useDeleteLesson();
   const { name, description, thumbnail, createdAt } = lesson;
 
@@ -44,6 +48,10 @@ export function LessonCard({ lesson, authContext }: Props) {
     .join("")
     .toUpperCase()
     .slice(0, 2);
+
+  const handleEdit = () => {
+    setUpdateId(lesson.id.toString());
+  };
 
   const handleDelete = () => {
     deleteMutate({ id: lesson.id });
@@ -67,7 +75,10 @@ export function LessonCard({ lesson, authContext }: Props) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {permissions?.update && (
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={handleEdit}
+                  >
                     <EditIcon className="size-4" /> Edit Lesson
                   </DropdownMenuItem>
                 )}

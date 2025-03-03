@@ -18,13 +18,14 @@ import { LessonsGridPagination } from "./lessons-grid/lessons-grid-pagination";
 import { authClient } from "@/features/auth/auth-client";
 
 import { LessonsAuthContext } from "@/features/lessons/lessons-auth-context";
+import { UpdateLesson } from "./update-lesson-dialog";
 
 interface Props {
   authContext: LessonsAuthContext;
 }
 
 export function LessonsListing({ authContext }: Props) {
-  const { page, limit, searchQuery } = useLessonsGridFilters();
+  const { page, limit, searchQuery, updateId } = useLessonsGridFilters();
   const activeOrg = authClient.useActiveOrganization();
   const router = useRouter();
 
@@ -66,32 +67,36 @@ export function LessonsListing({ authContext }: Props) {
   }
 
   return (
-    <div className=" flex flex-col gap-8 flex-1">
-      {data.pagination.total > 0 ? (
-        <div className="flex-1 grid grid-cols-3 gap-4">
-          {data.data.map((lesson) => (
-            <LessonCard
-              key={lesson.id}
-              lesson={lesson as any}
-              authContext={authContext}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="flex-1 flex flex-col items-center justify-center gap-3">
-          <Presentation className="size-12 text-foreground/60" />
-          <div className="space-y-1 text-center">
-            <h1 className="font-semibold text-xl font-heading">
-              No any lessons here
-            </h1>
-            <p className="text-foreground/60 text-sm">
-              There are no lessons available for selected class
-            </p>
-          </div>
-        </div>
-      )}
+    <>
+      <UpdateLesson />
 
-      <LessonsGridPagination totalItems={data.pagination.total} />
-    </div>
+      <div className=" flex flex-col gap-8 flex-1">
+        {data.pagination.total > 0 ? (
+          <div className="flex-1 grid grid-cols-3 gap-4">
+            {data.data.map((lesson) => (
+              <LessonCard
+                key={lesson.id}
+                lesson={lesson as any}
+                authContext={authContext}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex-1 flex flex-col items-center justify-center gap-3">
+            <Presentation className="size-12 text-foreground/60" />
+            <div className="space-y-1 text-center">
+              <h1 className="font-semibold text-xl font-heading">
+                No any lessons here
+              </h1>
+              <p className="text-foreground/60 text-sm">
+                There are no lessons available for selected class
+              </p>
+            </div>
+          </div>
+        )}
+
+        <LessonsGridPagination totalItems={data.pagination.total} />
+      </div>
+    </>
   );
 }
