@@ -33,8 +33,15 @@ import {
 } from "../schema/create-class";
 
 import { useCreateClass } from "../api/use-create-class";
+import { authClient } from "@/features/auth/auth-client";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function AddNewClass() {
+  const {
+    data: session,
+    error: sessionErr,
+    isPending: sessionPending,
+  } = authClient.useSession();
   const { isPending, mutate } = useCreateClass();
 
   const [open, setOpen] = useState<boolean>(false);
@@ -63,6 +70,14 @@ export function AddNewClass() {
       },
     });
   };
+
+  if (sessionPending) {
+    return <Skeleton className="h-8 w-40" />;
+  }
+
+  if (session?.user.role !== "admin") {
+    return <></>;
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
