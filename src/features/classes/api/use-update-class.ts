@@ -5,10 +5,14 @@ import { useId } from "react";
 import { CreateClassSchema } from "../schema/create-class";
 import { authClient } from "@/features/auth/auth-client";
 import { toKebabCase } from "@/lib/utils";
+import { MediaFile, MediaUploadPaths } from "@/modules/media/types";
+import { getMediaType } from "@/modules/media/utils";
+import { useMediaUpload } from "@/modules/media/hooks/useMediaUpload";
 
 export const useUpdateClass = () => {
   const queryClient = useQueryClient();
   const toastId = useId();
+  const { upload } = useMediaUpload();
 
   const mutation = useMutation({
     mutationFn: async (values: CreateClassSchema & { id: string }) => {
@@ -17,12 +21,29 @@ export const useUpdateClass = () => {
         image: values.image instanceof File ? values.image : "",
       };
 
-      //   Todo: Implement image upload process
+      //   Implement image upload process
+      const imageFile = finalValues.image;
+      const acceptedTypes = ["image"];
+      let uploadResult: MediaFile | null = null;
+
+      if (imageFile instanceof File) {
+        const type = getMediaType(imageFile.type);
+
+        if (!acceptedTypes.includes(type)) {
+          throw new Error("File type not supported");
+        }
+
+        uploadResult = await upload({
+          file: imageFile,
+          type: type,
+          path: MediaUploadPaths.ORGANIZATIONS,
+        });
+      }
 
       const { data, error } = await authClient.organization.update({
         data: {
           name: finalValues.name,
-          logo: undefined,
+          logo: uploadResult?.url || undefined,
           metadata: {
             description: finalValues.description,
           },
