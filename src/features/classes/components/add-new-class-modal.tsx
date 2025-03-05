@@ -76,7 +76,7 @@ export function AddNewClass() {
   }
 
   if (session?.user.role !== "admin") {
-    return <></>;
+    return null;
   }
 
   return (
