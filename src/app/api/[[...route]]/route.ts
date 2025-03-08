@@ -7,6 +7,7 @@ import studentsRoutes from "@/features/students/server/route";
 import adminsRoutes from "@/features/admins/server/route";
 import userRoutes from "@/features/users/server/route";
 import lessonsRoutes from "@/features/lessons/server/route";
+import materialsRoutes from "@/features/materials/server/route";
 
 const app = new Hono().basePath("/api");
 
@@ -22,6 +23,7 @@ const routes = app
 
   // Content Management Routes
   .route("/lessons", lessonsRoutes)
+  .route("/materials", materialsRoutes)
 
   // Admin Settings Routes
   .route("/users", userRoutes);

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "@/features/novel/styles/prosemirror.css";
 
 import Providers from "@/components/providers";
 import { fontHeading, fontSans } from "@/lib/fonts";

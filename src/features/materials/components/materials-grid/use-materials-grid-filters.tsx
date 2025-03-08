@@ -5,7 +5,7 @@ import { useQueryState } from "nuqs";
 
 import { searchParams } from "@/lib/searchparams";
 
-export function useLessonsGridFilters() {
+export function useMaterialsGridFilters() {
   const [searchQuery, setSearchQuery] = useQueryState(
     "q",
     searchParams.q
@@ -28,17 +28,11 @@ export function useLessonsGridFilters() {
     searchParams.updateId.withDefault("")
   );
 
-  const [lessonId, setLessonId] = useQueryState(
-    "active_lesson",
-    searchParams.lessonId.withDefault("")
-  );
-
   const resetFilters = useCallback(() => {
     setSearchQuery(null);
     setPage(1);
     setLimit(10);
     setUpdateId(null);
-    setLessonId(null);
   }, [setSearchQuery, setPage]);
 
   const isAnyFilterActive = useMemo(() => {
@@ -63,9 +57,5 @@ export function useLessonsGridFilters() {
     // Update
     updateId,
     setUpdateId,
-
-    // Lesson
-    lessonId,
-    setLessonId,
   };
 }

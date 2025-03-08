@@ -2,7 +2,7 @@
 
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
-import { EditIcon, MoreHorizontal, TrashIcon } from "lucide-react";
+import { Book, EditIcon, MoreHorizontal, TrashIcon } from "lucide-react";
 
 import { SelectLesson } from "../schemas/db-schema";
 import {
@@ -22,6 +22,7 @@ import {
 import { useDeleteLesson } from "@/features/lessons/api/use-delete-lesson";
 import { LessonsAuthContext } from "../lessons-auth-context";
 import { useLessonsGridFilters } from "./lessons-grid/use-lessons-grid-filters";
+import Link from "next/link";
 
 type Props = {
   lesson: SelectLesson;
@@ -74,6 +75,14 @@ export function LessonCard({ lesson, authContext }: Props) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem className="cursor-pointer" asChild>
+                  <Link
+                    href={`/dashboard/materials?active_lesson=${lesson.id}`}
+                  >
+                    <Book className="size-4" /> Lesson Materials
+                  </Link>
+                </DropdownMenuItem>
+
                 {permissions?.update && (
                   <DropdownMenuItem
                     className="cursor-pointer"

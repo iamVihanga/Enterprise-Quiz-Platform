@@ -11,7 +11,7 @@ export interface MediaFile {
 
 export interface UploadParams {
   file: File;
-  type: MediaType;
+  type?: MediaType;
   path?: string;
 }
 
@@ -19,4 +19,5 @@ export enum MediaUploadPaths {
   ORGANIZATIONS = "organizations",
   PROFILE_IMAGES = "profile_images",
   LESSON_THUMBNAILS = "lessons/thumbnails",
+  MATERIAL_ASSETS = "material_assets",
 }

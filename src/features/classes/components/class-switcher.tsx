@@ -3,6 +3,8 @@
 import React, { useId, useState, useEffect } from "react";
 import { ChevronsUpDown, CogIcon, GraduationCap } from "lucide-react";
 import Image from "next/image";
+import { toast } from "sonner";
+import Link from "next/link";
 
 import {
   DropdownMenu,
@@ -19,14 +21,16 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/features/auth/auth-client";
-import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import Link from "next/link";
+
+import { useLessonsGridFilters } from "@/features/lessons/components/lessons-grid/use-lessons-grid-filters";
 
 export function ClassSwitcher() {
   const toastId = useId();
   const { isMobile } = useSidebar();
   const [mounted, setMounted] = useState(false);
+
+  const { setLessonId } = useLessonsGridFilters();
 
   const { data: activeClass, isPending: isPendingActiveClass } =
     authClient.useActiveOrganization();
@@ -66,6 +70,9 @@ export function ClassSwitcher() {
           toast.loading("Switching class...", { id: toastId });
         },
         onSuccess() {
+          // Set lesson id to null to reset the lesson grid
+          setLessonId(null);
+
           toast.success("Switched to class successfully!", { id: toastId });
         },
         onError({ error }) {
