@@ -10,8 +10,9 @@ import { sessionMiddleware } from "@/features/auth/middlewares/session-middlewar
 import { auth } from "@/lib/auth";
 import {
   addMaterialSchema,
+  deleteMaterialSchema,
   findByIdMaterialSchema,
-} from "@/features/materials/schemas/zod-lesson-schema";
+} from "@/features/materials/schemas/zod-material-schema";
 
 type QueryParams = {
   page?: string;
@@ -197,6 +198,102 @@ const app = new Hono()
       });
 
       return c.json({ data: material }, 200);
+    }
+  )
+
+  /**
+   * Update material by ID (PUT: /:id)
+   */
+  .put(
+    "/:id",
+    zValidator("form", addMaterialSchema),
+    sessionMiddleware,
+    async (c) => {
+      const material_id = parseInt(c.req.param("id"));
+
+      if (!material_id) {
+        return c.json({ error: "Material ID is required" }, 400);
+      }
+
+      // Check user has permission to create lesson
+      const hasPermission = await auth.api.hasPermission({
+        headers: await headers(),
+        body: {
+          permission: {
+            materials: ["update"],
+          },
+        },
+      });
+
+      if (hasPermission.error || !hasPermission.success) {
+        return c.json(
+          { error: "You don't have permission to update lessons" },
+          403
+        );
+      }
+
+      const validformData = c.req.valid("form");
+
+      // Create new material with server-managed fields
+      const now = new Date();
+
+      const material = await db
+        .update(materialSchema)
+        .set({
+          ...validformData,
+          lessonId: parseInt(validformData.lessonId),
+          updatedAt: now,
+        })
+        .where(eq(materialSchema.id, material_id));
+
+      return c.json({ data: material }, 200);
+    }
+  )
+
+  /**
+   * Delete material by ID (DELETE: /:id)
+   */
+  .delete(
+    "/:id",
+    sessionMiddleware,
+    zValidator("param", deleteMaterialSchema),
+    async (c) => {
+      try {
+        const material_id = parseInt(c.req.param("id"));
+
+        if (!material_id) {
+          return c.json({ error: "Material ID is required" }, 400);
+        }
+
+        // Check user has permission to delete lesson
+        const { error: permissionErr, success: hasPermission } =
+          await auth.api.hasPermission({
+            headers: await headers(),
+            body: {
+              permission: {
+                lesson: ["delete"],
+              },
+            },
+          });
+
+        if (!hasPermission || permissionErr) {
+          return c.json(
+            { error: "You don't have permission to delete lessons" },
+            403
+          );
+        }
+
+        // Delete lesson
+        const deletedMaterial = await db
+          .delete(materialSchema)
+          .where(eq(materialSchema.id, material_id));
+
+        return c.json({ data: deletedMaterial }, 200);
+      } catch (err) {
+        const error = err as Error;
+
+        c.json({ error: error.message }, 500);
+      }
     }
   );
 

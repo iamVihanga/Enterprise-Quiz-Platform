@@ -2,10 +2,11 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, BookCopy, Presentation } from "lucide-react";
+import { AlertCircle, BookCopy } from "lucide-react";
 
 import { useGetMaterials } from "../api/use-get-materials";
 import { useMaterialsGridFilters } from "./materials-grid/use-materials-grid-filters";
+import { MaterialsGridPagination } from "./materials-grid/meterials-grid-pagination";
 import { GridSkeleton } from "./grid-skeleton";
 import {
   Card,
@@ -13,9 +14,6 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-
-// import { LessonCard } from "./lesson-card";
-// import { LessonsGridPagination } from "./lessons-grid/lessons-grid-pagination";
 
 import { authClient } from "@/features/auth/auth-client";
 
@@ -80,7 +78,11 @@ export function MaterialsListing({ authContext }: Props) {
         {data.pagination.total > 0 ? (
           <div className="flex-1 grid grid-cols-3 gap-4">
             {data.data.map((material) => (
-              <MaterialCard key={material.id} material={material as any} />
+              <MaterialCard
+                key={material.id}
+                material={material as any}
+                authContext={authContext}
+              />
             ))}
           </div>
         ) : (
@@ -97,7 +99,7 @@ export function MaterialsListing({ authContext }: Props) {
           </div>
         )}
 
-        {/* <LessonsGridPagination totalItems={data.pagination.total} /> */}
+        <MaterialsGridPagination totalItems={data.pagination.total} />
       </div>
     </>
   );

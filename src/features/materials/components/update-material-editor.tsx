@@ -3,7 +3,8 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusCircle } from "lucide-react";
+import { EditIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import {
   addMaterialSchema,
@@ -29,12 +30,23 @@ import { Button } from "@/components/ui/button";
 
 import { NovelEditor } from "@/features/novel/components/editor";
 import { useLessonsGridFilters } from "@/features/lessons/components/lessons-grid/use-lessons-grid-filters";
-import { useCreateMaterial } from "../api/use-add-material";
-import { useRouter } from "next/navigation";
+import { useMaterialsGridFilters } from "./materials-grid/use-materials-grid-filters";
+import { useGetMaterial } from "../api/use-get-material-by-id";
+import { useUpdateMaterial } from "../api/use-update-material";
 
-export function NewMaterialEditor() {
+export function UpdateMaterialEditor() {
   const { lessonId } = useLessonsGridFilters();
-  const { mutate, isPending } = useCreateMaterial();
+  const { updateId } = useMaterialsGridFilters();
+
+  const {
+    data: currentMaterial,
+    isPending: isFetching,
+    error: fetchErr,
+  } = useGetMaterial({
+    materialId: updateId,
+  });
+
+  const { mutate, isPending } = useUpdateMaterial();
   const router = useRouter();
 
   const form = useForm<AddMaterialSchema>({
@@ -42,30 +54,43 @@ export function NewMaterialEditor() {
     defaultValues: {
       name: "",
       description: "",
-      content: "{}",
+      content: `{"type": "doc", "content": []}`,
       thumbnail: "",
       lessonId,
     },
   });
 
-  // Listen to lesson id and update form value
+  // Listen to fetch material id and update form value
   useEffect(() => {
-    form.setValue("lessonId", lessonId);
-  }, [lessonId]);
+    if (!fetchErr && currentMaterial) {
+      // Make sure content is valid JSON or use a default
+      const validContent = currentMaterial?.content || "{}";
 
-  const handleCreateMaterial = (values: AddMaterialSchema) => {
-    mutate(values, {
-      onSuccess: () => {
-        form.reset();
-        router.push(`/dashboard/materials?active_lesson=${lessonId}`);
-      },
-    });
+      form.reset({
+        name: currentMaterial.name,
+        description: currentMaterial?.description || undefined,
+        content: validContent,
+        lessonId: currentMaterial.lessonId.toString(),
+      });
+    }
+  }, [currentMaterial, fetchErr]);
+
+  const handleUpdateMaterial = (values: AddMaterialSchema) => {
+    mutate(
+      { id: updateId, values },
+      {
+        onSuccess: () => {
+          form.reset();
+          router.push(`/dashboard/materials?active_lesson=${lessonId}`);
+        },
+      }
+    );
   };
 
   return (
     <Card>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleCreateMaterial)}>
+        <form onSubmit={form.handleSubmit(handleUpdateMaterial)}>
           <CardHeader>
             <CardTitle>
               <FormField
@@ -76,6 +101,7 @@ export function NewMaterialEditor() {
                     <FormLabel />
                     <FormControl>
                       <input
+                        disabled={isFetching}
                         placeholder="Lesson material title..."
                         className="text-2xl font-normal w-full outline-none border-none px-5 py-4 rounded-md dark:bg-neutral-900/45 bg-neutral-100"
                         {...field}
@@ -95,6 +121,7 @@ export function NewMaterialEditor() {
                     <FormLabel />
                     <FormControl>
                       <input
+                        disabled={isFetching}
                         placeholder="Lesson material description"
                         className="text-sm font-normal w-full outline-none border-none px-5 py-4 rounded-md dark:bg-neutral-900/45 bg-neutral-100"
                         {...field}
@@ -108,18 +135,16 @@ export function NewMaterialEditor() {
           </CardHeader>
 
           <CardContent>
+            {/* {currentMaterial?.content} */}
             <NovelEditor
-              value={form.watch("content")}
+              value={form.watch("content") || "{}"}
               onChange={(value) => form.setValue("content", value)}
             />
           </CardContent>
 
           <CardFooter className="flex justify-end">
-            <Button
-              icon={<PlusCircle className="size-4" />}
-              loading={isPending}
-            >
-              Create Lesson Material
+            <Button icon={<EditIcon className="size-4" />} loading={isPending}>
+              Update Lesson Material
             </Button>
           </CardFooter>
         </form>

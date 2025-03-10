@@ -2,31 +2,32 @@ import { useId } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { type AddMaterialSchema } from "../schemas/zod-material-schema";
 import { client } from "@/lib/rpc";
 
-export function useCreateMaterial() {
+export function useDeleteMaterial() {
   const queryClient = useQueryClient();
   const toastId = useId();
 
   const mutation = useMutation({
-    mutationFn: async (values: AddMaterialSchema) => {
+    mutationFn: async (values: { id: number }) => {
       // Only send the fields that the client should provide
-      const response = await client.api.materials.$post({
-        form: values,
+      const response = await client.api.materials[":id"].$delete({
+        param: { id: values.id.toString() },
       });
 
-      return response;
+      const data = await response.json();
+
+      return data;
     },
     onMutate() {
-      toast.loading("Creating lesson material...", { id: toastId });
+      toast.loading("Deleting lesson material...", { id: toastId });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["materials"] });
-      toast.success("Lesson material created successfully", { id: toastId });
+      toast.success("Lesson material deleted successfully", { id: toastId });
     },
     onError: (error) => {
-      toast.error("Failed to create lesson material", {
+      toast.error("Failed to delete lesson material", {
         id: toastId,
         description: error.message,
       });

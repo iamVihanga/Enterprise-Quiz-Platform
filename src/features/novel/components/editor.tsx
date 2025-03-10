@@ -42,7 +42,11 @@ type EditorProps = {
   previewMode?: boolean;
 };
 
-export function NovelEditor({ value, onChange, previewMode }: EditorProps) {
+export function NovelEditor({
+  value,
+  onChange,
+  previewMode = false,
+}: EditorProps) {
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [charsCount, setCharsCount] = useState();
 
@@ -82,8 +86,9 @@ export function NovelEditor({ value, onChange, previewMode }: EditorProps) {
 
       <EditorRoot>
         <EditorContent
-          editable={false}
-          initialContent={JSON.parse(value)}
+          immediatelyRender={false}
+          editable={previewMode ? false : true}
+          initialContent={value ? JSON.parse(value) : {}}
           extensions={extensions}
           className="relative  h-full w-full border-none sm:mb-[calc(20vh)]"
           editorProps={{

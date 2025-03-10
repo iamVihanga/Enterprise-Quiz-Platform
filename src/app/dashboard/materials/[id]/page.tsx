@@ -6,6 +6,8 @@ import { useParams } from "next/navigation";
 import { useGetMaterial } from "@/features/materials/api/use-get-material-by-id";
 import { Separator } from "@/components/ui/separator";
 import { NovelEditor } from "@/features/novel/components/editor";
+import { SingleMaterialLoading } from "./_components/loading";
+import { SingleMaterialError } from "./_components/error";
 
 export default function SingleMaterialPage() {
   const params = useParams<{ id: string }>();
@@ -15,15 +17,11 @@ export default function SingleMaterialPage() {
   });
 
   if (isPending) {
-    return <div className="">Loading...</div>;
+    return <SingleMaterialLoading />;
   }
 
   if (error || !data) {
-    return (
-      <div className="">
-        Error: {error?.message || "Something went wrong !"}
-      </div>
-    );
+    return <SingleMaterialError error={error || Error("Server Error")} />;
   }
 
   return (

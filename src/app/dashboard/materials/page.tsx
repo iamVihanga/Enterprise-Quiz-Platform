@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import LessonSelector from "@/features/lessons/components/lesson-selector";
 import { MaterialsListing } from "@/features/materials/components/materials-listing";
+import { MaterialsGridActions } from "@/features/materials/components/materials-grid/materials-grid-actions";
 
 interface MaterialsPageProps {
   searchParams: Promise<{ active_lesson?: string }>;
@@ -95,8 +96,11 @@ export default async function MaterialsPage({
             </Card>
           </div>
         ) : (
-          // Materials listing
-          <MaterialsListing authContext={authContext} />
+          <>
+            <MaterialsGridActions />
+
+            <MaterialsListing authContext={authContext} />
+          </>
         )}
       </div>
     </PageContainer>
