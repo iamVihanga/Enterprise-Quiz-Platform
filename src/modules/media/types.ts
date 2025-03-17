@@ -20,4 +20,5 @@ export enum MediaUploadPaths {
   PROFILE_IMAGES = "profile_images",
   LESSON_THUMBNAILS = "lessons/thumbnails",
   MATERIAL_ASSETS = "material_assets",
+  QUIZZES = "quizzes",
 }

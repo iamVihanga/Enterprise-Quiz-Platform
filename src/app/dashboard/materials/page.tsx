@@ -10,7 +10,7 @@ import { materialsAuthContext } from "@/features/materials/materials-auth-contex
 import { ClassSwitcher } from "@/features/classes/components/class-switcher";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import LessonSelector from "@/features/lessons/components/lesson-selector";
+import { LessonSelector } from "@/features/lessons/components/lesson-selector";
 import { MaterialsListing } from "@/features/materials/components/materials-listing";
 import { MaterialsGridActions } from "@/features/materials/components/materials-grid/materials-grid-actions";
 

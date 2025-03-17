@@ -13,6 +13,7 @@ const statement = {
   ...defaultStatements,
   lesson: ["create", "read", "share", "update", "delete"],
   materials: ["create", "read", "share", "update", "delete"],
+  quizzes: ["create", "read", "share", "update", "delete"],
 } as const;
 
 export const ac = createAccessControl(statement);
@@ -20,17 +21,20 @@ export const ac = createAccessControl(statement);
 export const member = ac.newRole({
   lesson: ["read", "share"],
   materials: ["read"],
+  quizzes: ["read"],
   ...memberAc.statements,
 });
 
 export const admin = ac.newRole({
   lesson: ["read", "create", "update", "share", "delete"],
   materials: ["read", "create", "update", "share", "delete"],
+  quizzes: ["read", "create", "update", "share", "delete"],
   ...adminAc.statements,
 });
 
 export const owner = ac.newRole({
   lesson: ["create", "read", "share", "update", "delete"],
   materials: ["create", "read", "share", "update", "delete"],
+  quizzes: ["create", "read", "share", "update", "delete"],
   ...ownerAc.statements,
 });

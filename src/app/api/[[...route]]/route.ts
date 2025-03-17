@@ -8,6 +8,8 @@ import adminsRoutes from "@/features/admins/server/route";
 import userRoutes from "@/features/users/server/route";
 import lessonsRoutes from "@/features/lessons/server/route";
 import materialsRoutes from "@/features/materials/server/route";
+import quizzesRoutes from "@/features/quizzes/server/route";
+import questionsRoutes from "@/features/quizzes/server/questions/route";
 
 const app = new Hono().basePath("/api");
 
@@ -24,6 +26,8 @@ const routes = app
   // Content Management Routes
   .route("/lessons", lessonsRoutes)
   .route("/materials", materialsRoutes)
+  .route("/quizzes", quizzesRoutes)
+  .route("/questions", questionsRoutes)
 
   // Admin Settings Routes
   .route("/users", userRoutes);

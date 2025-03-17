@@ -66,7 +66,7 @@ export function NovelEditor({
   );
 
   return (
-    <Card className="relative min-h-[80vh] border-none w-full dark:bg-neutral-900/45 bg-neutral-100">
+    <Card className="relative min-h-[80vh] border-none w-full dark:bg-neutral-900/45 bg-sidebar">
       {!previewMode && (
         <div className="flex absolute right-5 top-5 z-10 mb-5 gap-2">
           <div className="rounded-lg bg-accent px-2 py-1 text-sm text-muted-foreground">

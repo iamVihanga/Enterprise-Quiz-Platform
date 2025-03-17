@@ -15,6 +15,13 @@
       "when": 1739986603347,
       "tag": "0001_confused_eddie_brock",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741873134394,
+      "tag": "0002_steady_mulholland_black",
+      "breakpoints": true
     }
   ]
 }

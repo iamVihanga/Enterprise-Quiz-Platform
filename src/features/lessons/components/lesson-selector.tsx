@@ -30,10 +30,12 @@ import { useRouter } from "next/navigation";
 
 interface LessonSelectorProps {
   fullWidth?: boolean;
+  widthGrow?: boolean;
 }
 
-export default function LessonSelector({
+export function LessonSelector({
   fullWidth = false,
+  widthGrow = false,
 }: LessonSelectorProps) {
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
@@ -83,7 +85,9 @@ export default function LessonSelector({
                   loading={gettingActiveLesson}
                   disabled={gettingActiveLesson}
                   icon={<ChevronsUpDown className="size-3" />}
-                  className="justify-start"
+                  className={`justify-start ${
+                    fullWidth && widthGrow && "w-full"
+                  }`}
                 >
                   <span className={`${fullWidth ? "" : "max-w-44"}  truncate`}>
                     {activeLesson

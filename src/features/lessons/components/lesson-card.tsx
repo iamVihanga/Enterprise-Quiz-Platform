@@ -2,7 +2,13 @@
 
 import React from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Book, EditIcon, MoreHorizontal, TrashIcon } from "lucide-react";
+import {
+  Book,
+  EditIcon,
+  FileQuestion,
+  MoreHorizontal,
+  TrashIcon,
+} from "lucide-react";
 
 import { SelectLesson } from "../schemas/db-schema";
 import {
@@ -80,6 +86,11 @@ export function LessonCard({ lesson, authContext }: Props) {
                     href={`/dashboard/materials?active_lesson=${lesson.id}`}
                   >
                     <Book className="size-4" /> Lesson Materials
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" asChild>
+                  <Link href={`/dashboard/quizzes?active_lesson=${lesson.id}`}>
+                    <FileQuestion className="size-4" /> All Quizzes
                   </Link>
                 </DropdownMenuItem>
 

@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { useSidebar } from "@/components/ui/sidebar";
 import PageContainer from "@/components/layouts/page-container";
 import { NewMaterialEditor } from "@/features/materials/components/new-material-editor";
-import LessonSelector from "@/features/lessons/components/lesson-selector";
+import { LessonSelector } from "@/features/lessons/components/lesson-selector";
 
 export default function AddNewMaterialPage() {
   const { state, toggleSidebar } = useSidebar();
