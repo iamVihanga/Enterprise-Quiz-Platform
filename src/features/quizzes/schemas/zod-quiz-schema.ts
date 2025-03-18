@@ -150,6 +150,9 @@ const questionWithOptionsSchema = z.discriminatedUnion("questionType", [
 // Final schema for adding a question
 export const addQuestionSchema = questionWithOptionsSchema;
 
+// Final schema for addition bulk questions list
+export const addMutltipleQuestionsSchema = z.array(addQuestionSchema);
+
 // Schema for updating a question - same as adding, but with ID
 export const updateQuestionSchema = questionWithOptionsSchema;
 
@@ -157,6 +160,10 @@ export const updateQuestionSchema = questionWithOptionsSchema;
 export type AddQuizInput = z.infer<typeof addQuizSchema>;
 export type UpdateQuizInput = z.infer<typeof updateQuizSchema>;
 export type AddQuestionInput = z.infer<typeof addQuestionSchema>;
+export type AddMultipleQuestionInput = z.infer<
+  typeof addMutltipleQuestionsSchema
+>;
+
 export type UpdateQuestionInput = z.infer<typeof updateQuestionSchema>;
 
 // Re-export the QuestionType from DB schema for consistency

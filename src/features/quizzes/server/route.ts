@@ -17,6 +17,7 @@ import {
   deleteQuizSchema,
   findByIdQuizSchema,
   addQuestionSchema,
+  addMutltipleQuestionsSchema,
 } from "@/features/quizzes/schemas/zod-quiz-schema";
 
 type QueryParams = {
@@ -421,6 +422,85 @@ const app = new Hono()
           .returning();
 
         return c.json({ data: newQuestion[0] }, 201);
+      } catch (err) {
+        const error = err as Error;
+        return c.json({ error: error.message }, 500);
+      }
+    }
+  )
+
+  /**
+   * Add multiple questions to a quiz at once (POST: /:quizId/questions-list)
+   */
+  .post(
+    "/:id/questions-list",
+    sessionMiddleware,
+    zValidator("json", addMutltipleQuestionsSchema),
+    async (c) => {
+      try {
+        const quiz_id = parseInt(c.req.param("id"));
+
+        if (!quiz_id) {
+          return c.json({ error: "Quiz ID is required" }, 400);
+        }
+
+        // Check user has permission
+        const hasPermission = await auth.api.hasPermission({
+          headers: await headers(),
+          body: {
+            permission: {
+              quizzes: ["update"],
+            },
+          },
+        });
+
+        if (hasPermission.error || !hasPermission.success) {
+          return c.json(
+            { error: "You don't have permission to add questions" },
+            403
+          );
+        }
+
+        const questions = c.req.valid("json");
+
+        // Check if quiz exists
+        const quiz = await db
+          .select()
+          .from(quizzesSchema)
+          .where(eq(quizzesSchema.id, quiz_id))
+          .limit(1);
+
+        if (!quiz || quiz.length === 0) {
+          return c.json({ error: "Quiz not found" }, 404);
+        }
+
+        // Get the highest order index to start our sequence from
+        const maxOrderQuery = await db
+          .select({
+            maxOrder: sql<number>`COALESCE(MAX(${questionsSchema.orderIndex}), 0)`,
+          })
+          .from(questionsSchema)
+          .where(eq(questionsSchema.quizId, quiz_id));
+
+        const startOrderIndex = (maxOrderQuery[0]?.maxOrder || 0) + 1;
+
+        // Prepare the questions for bulk insertion
+        const now = new Date();
+        const questionsToInsert = questions.map((question, index) => ({
+          ...question,
+          quizId: quiz_id,
+          orderIndex: startOrderIndex + index,
+          createdAt: now,
+          updatedAt: now,
+        }));
+
+        // Bulk insert all questions
+        const newQuestions = await db
+          .insert(questionsSchema)
+          .values(questionsToInsert)
+          .returning();
+
+        return c.json({ data: newQuestions }, 201);
       } catch (err) {
         const error = err as Error;
         return c.json({ error: error.message }, 500);

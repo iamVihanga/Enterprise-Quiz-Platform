@@ -76,6 +76,9 @@ import { ShortAnswerOptions } from "./options/short-answer-options";
 import { MatchingOptions } from "./options/matching-options";
 import { FillInBlanksOptions } from "./options/fill-in-blanks-options";
 
+import { useCreateQuestions } from "@/features/quizzes/api/use-create-questions";
+import { useRouter } from "next/navigation";
+
 // Type for our form values
 export type QuestionFormValues = {
   questions: AddQuestionInput[];
@@ -86,7 +89,9 @@ interface QuizQuestionFormProps {
 }
 
 export function QuestionsForm({ quizData }: QuizQuestionFormProps) {
+  const router = useRouter();
   const [expandedQuestions, setExpandedQuestions] = useState<string[]>([]);
+  const { mutate, isPending } = useCreateQuestions();
 
   const form = useForm<QuestionFormValues>({
     resolver: zodResolver(
@@ -120,8 +125,17 @@ export function QuestionsForm({ quizData }: QuizQuestionFormProps) {
   });
 
   const onSubmit = (data: QuestionFormValues) => {
-    console.log("Quiz setup:", quizData);
-    console.log("Questions:", data);
+    mutate(
+      {
+        questions: data.questions,
+        quizId: quizData.id.toString(),
+      },
+      {
+        onSuccess: () => {
+          router.push(`/dashboard/quizzes/${quizData.id}`);
+        },
+      }
+    );
   };
 
   const handleAddQuestion = () => {
@@ -172,7 +186,9 @@ export function QuestionsForm({ quizData }: QuizQuestionFormProps) {
               Add Question
             </Button>
 
-            <Button icon={<SaveIcon />}>Save Quiz</Button>
+            <Button icon={<SaveIcon />} loading={isPending}>
+              Save Quiz
+            </Button>
           </div>
         </div>
 
