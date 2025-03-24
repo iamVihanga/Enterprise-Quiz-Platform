@@ -14,6 +14,7 @@ import { auth } from "@/lib/auth";
 import {
   addQuizSchema,
   updateQuizSchema,
+  updateQuizParamSchema,
   deleteQuizSchema,
   findByIdQuizSchema,
   addQuestionSchema,
@@ -71,23 +72,24 @@ const app = new Hono()
         .where(eq(quizzesSchema.organizationId, activeOrganizationId))
         .$dynamic();
 
+      // Conditions array
+      let conditions = [eq(quizzesSchema.organizationId, activeOrganizationId)];
+
       // Add lesson filter if provided
       if (lessonId && parseInt(lessonId) > 0) {
         const lessonIdNum = parseInt(lessonId);
-        countQuery.where(eq(quizzesSchema.lessonId, lessonIdNum));
-        itemsQuery.where(eq(quizzesSchema.lessonId, lessonIdNum));
+        conditions.push(eq(quizzesSchema.lessonId, lessonIdNum));
       }
 
       // Add search condition if search parameter exists
       if (search) {
-        const searchCondition = and(
-          ilike(quizzesSchema.title, `%${search}%`),
-          eq(quizzesSchema.organizationId, activeOrganizationId)
-        );
-
-        countQuery.where(searchCondition);
-        itemsQuery.where(searchCondition);
+        conditions.push(ilike(quizzesSchema.title, `%${search}%`));
       }
+
+      // Apply all conditions together
+      const whereCondition = and(...conditions);
+      countQuery.where(whereCondition);
+      itemsQuery.where(whereCondition);
 
       // Execute both queries
       const [countResult] = await countQuery;
@@ -246,7 +248,8 @@ const app = new Hono()
    */
   .put(
     "/:id",
-    zValidator("form", updateQuizSchema),
+    zValidator("json", updateQuizSchema),
+    zValidator("param", updateQuizParamSchema),
     sessionMiddleware,
     async (c) => {
       try {
@@ -273,7 +276,7 @@ const app = new Hono()
           );
         }
 
-        const validFormData = c.req.valid("form");
+        const validFormData = c.req.valid("json");
 
         // Update quiz with server-managed fields
         const now = new Date();

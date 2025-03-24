@@ -19,7 +19,23 @@ export default async function NewMaterialTemplate({
   ) {
     const authContext = await quizzesAuthContext();
 
-    if ("error" in authContext || !authContext.permissions?.create) {
+    if ("error" in authContext) {
+      return redirect("/dashboard/quizzes");
+    }
+
+    // Check is user has permission to create quiz and validate create quiz route
+    if (
+      header_url === "/dashboard/quizzes/new" &&
+      header_url.includes("/dashboard/quizzes/%5Bid%5D/questions") &&
+      !authContext.permissions?.create
+    ) {
+      return redirect("/dashboard/quizzes");
+    }
+
+    if (
+      header_url.includes("/dashboard/quizzes/update") &&
+      !authContext.permissions?.update
+    ) {
       return redirect("/dashboard/quizzes");
     }
   }
