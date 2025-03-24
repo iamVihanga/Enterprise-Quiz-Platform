@@ -2,17 +2,19 @@
 
 import React, { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader, XCircle } from "lucide-react";
+import { ArrowLeft, Loader, LockIcon, XCircle } from "lucide-react";
 
 import PageContainer from "@/components/layouts/page-container";
 import { AppPageShell } from "@/components/layouts/page-shell";
 
 import { useSidebar } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useGetQuizById } from "@/features/quizzes/api/use-get-quiz-by-id";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { QuizUpdateForm } from "@/features/quizzes/components/quiz-update-form";
 
 export default function UpdateQuizPage() {
   const params = useParams<{ id: string }>();
@@ -57,19 +59,42 @@ export default function UpdateQuizPage() {
 
   return (
     <PageContainer scrollable={true}>
-      <div className="flex flex-1 flex-col space-y-4">
+      <Tabs className="flex flex-1 flex-col space-y-4" defaultValue="quiz">
         <AppPageShell
           title={`Update Quiz`}
           description="Update quiz details & questions"
           actionComponent={
-            <Button icon={<ArrowLeft />} onClick={() => router.back()}>
-              Go Back
-            </Button>
+            <div className="flex items-center gap-3">
+              <TabsList>
+                <TabsTrigger value="quiz">Quiz Details</TabsTrigger>
+                <TabsTrigger value="questions" disabled>
+                  {/* Todo: Remove after implement update */}
+                  <LockIcon className="size-4 mr-2" />
+                  Questions
+                </TabsTrigger>
+              </TabsList>
+
+              <Button icon={<ArrowLeft />} onClick={() => router.back()}>
+                Go Back
+              </Button>
+            </div>
           }
         />
+
         <Separator />
-        Update Quiz Form
-      </div>
+
+        <TabsContent value="quiz">
+          <QuizUpdateForm
+            data={{
+              ...data,
+              createdAt: new Date(data.createdAt),
+              updatedAt: new Date(data.updatedAt),
+            }}
+          />
+        </TabsContent>
+
+        <TabsContent value="questions"></TabsContent>
+      </Tabs>
     </PageContainer>
   );
 }

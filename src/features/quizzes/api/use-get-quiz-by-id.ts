@@ -4,7 +4,7 @@ import { client } from "@/lib/rpc";
 
 export function useGetQuizById(id: string) {
   const query = useQuery({
-    queryKey: ["classes", { id }],
+    queryKey: ["quizzes", { id }],
     queryFn: async () => {
       const response = await client.api.quizzes[":id"].$get({
         param: { id },

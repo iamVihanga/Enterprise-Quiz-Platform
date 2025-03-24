@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { quizzesAuthContext } from "@/features/quizzes/quizzes-auth-context";
 import { ClassSwitcher } from "@/features/classes/components/class-switcher";
 import { LessonSelector } from "@/features/lessons/components/lesson-selector";
+import { QuizzesListing } from "@/features/quizzes/components/quizzes-listing";
+import { QuizGridActions } from "@/features/quizzes/components/quizzes-listing/quizzes-grid-actions";
 
 interface QuizzesPageProps {
   searchParams: Promise<{ active_lesson?: string }>;
@@ -92,7 +94,10 @@ export default async function QuizzesPage({ searchParams }: QuizzesPageProps) {
             </Card>
           </div>
         ) : (
-          <>Quiz Listing goes here</>
+          <>
+            <QuizGridActions />
+            <QuizzesListing authContext={authContext} />
+          </>
         )}
       </div>
     </PageContainer>

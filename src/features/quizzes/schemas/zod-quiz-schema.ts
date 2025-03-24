@@ -45,6 +45,12 @@ export const deleteQuizSchema = z.object({
   }),
 });
 
+export const updateQuizParamSchema = z.object({
+  id: z.string().refine((val) => !isNaN(parseInt(val)), {
+    message: "Quiz ID must be a valid number",
+  }),
+});
+
 // Schema for question ID parameter validation
 export const deleteQuestionSchema = z.object({
   questionId: z.string().refine((val) => !isNaN(parseInt(val)), {
@@ -158,7 +164,10 @@ export const updateQuestionSchema = questionWithOptionsSchema;
 
 // Export types that leverage the DB schema types
 export type AddQuizInput = z.infer<typeof addQuizSchema>;
+
 export type UpdateQuizInput = z.infer<typeof updateQuizSchema>;
+export type UpdateParamsQuizInput = z.infer<typeof updateQuizParamSchema>;
+
 export type AddQuestionInput = z.infer<typeof addQuestionSchema>;
 export type AddMultipleQuestionInput = z.infer<
   typeof addMutltipleQuestionsSchema
