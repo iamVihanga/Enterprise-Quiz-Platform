@@ -16,9 +16,10 @@ import { Input } from "@/components/ui/input";
 type Props = {
   form: UseFormReturn<QuestionFormValues, any, undefined>;
   index: number;
+  updateMode?: boolean;
 };
 
-export function ShortAnswerOptions({ form, index }: Props) {
+export function ShortAnswerOptions({ form, index, updateMode = false }: Props) {
   if (form.watch(`questions.${index}.questionType`) === "short_answer") {
     return (
       <div className="space-y-4">

@@ -173,7 +173,9 @@ export type AddMultipleQuestionInput = z.infer<
   typeof addMutltipleQuestionsSchema
 >;
 
-export type UpdateQuestionInput = z.infer<typeof updateQuestionSchema>;
+export type UpdateQuestionInput = { id: string } & z.infer<
+  typeof updateQuestionSchema
+>;
 
 // Re-export the QuestionType from DB schema for consistency
 export { QuestionType };

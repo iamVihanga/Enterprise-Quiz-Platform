@@ -14,7 +14,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetQuizById } from "@/features/quizzes/api/use-get-quiz-by-id";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
 import { QuizUpdateForm } from "@/features/quizzes/components/quiz-update-form";
+import { QuestionsUpdateForm } from "@/features/quizzes/components/questions-form/questions-update-form";
 
 export default function UpdateQuizPage() {
   const params = useParams<{ id: string }>();
@@ -67,11 +69,7 @@ export default function UpdateQuizPage() {
             <div className="flex items-center gap-3">
               <TabsList>
                 <TabsTrigger value="quiz">Quiz Details</TabsTrigger>
-                <TabsTrigger value="questions" disabled>
-                  {/* Todo: Remove after implement update */}
-                  <LockIcon className="size-4 mr-2" />
-                  Questions
-                </TabsTrigger>
+                <TabsTrigger value="questions">Questions</TabsTrigger>
               </TabsList>
 
               <Button icon={<ArrowLeft />} onClick={() => router.back()}>
@@ -93,7 +91,12 @@ export default function UpdateQuizPage() {
           />
         </TabsContent>
 
-        <TabsContent value="questions"></TabsContent>
+        <TabsContent value="questions">
+          <QuestionsUpdateForm
+            quidId={data.id}
+            questions={data.questions as any}
+          />
+        </TabsContent>
       </Tabs>
     </PageContainer>
   );

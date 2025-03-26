@@ -12,9 +12,14 @@ import { addMultipleChoiceOption, removeOption } from "../utils";
 type Props = {
   form: UseFormReturn<QuestionFormValues, any, undefined>;
   index: number;
+  updateMode?: boolean;
 };
 
-export function MultipleChoiceOptions({ form, index }: Props) {
+export function MultipleChoiceOptions({
+  form,
+  index,
+  updateMode = false,
+}: Props) {
   if (form.watch(`questions.${index}.questionType`) === "multiple_choice") {
     const correctAnswer = form.watch(
       `questions.${index}.correctAnswer`
@@ -70,30 +75,35 @@ export function MultipleChoiceOptions({ form, index }: Props) {
                   }}
                   className="flex-1"
                 />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeOption(index, optionIndex, form)}
-                  disabled={
-                    (form.watch(`questions.${index}.options`) || []).length <= 2
-                  }
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                {!updateMode && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeOption(index, optionIndex, form)}
+                    disabled={
+                      (form.watch(`questions.${index}.options`) || []).length <=
+                      2
+                    }
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
             )
           )}
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => addMultipleChoiceOption(form, index)}
-          icon={<PlusIcon />}
-        >
-          Add Option
-        </Button>
+        {!updateMode && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => addMultipleChoiceOption(form, index)}
+            icon={<PlusIcon />}
+          >
+            Add Option
+          </Button>
+        )}
       </>
     );
   }

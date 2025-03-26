@@ -19,6 +19,7 @@ import { addBlank, removeOption } from "../utils";
 type Props = {
   form: UseFormReturn<QuestionFormValues, any, undefined>;
   index: number;
+  updateMode?: boolean;
 };
 
 // Define the blank type to use in type guards
@@ -28,7 +29,7 @@ interface FillInBlank {
   caseSensitive?: boolean;
 }
 
-export function FillInBlanksOptions({ form, index }: Props) {
+export function FillInBlanksOptions({ form, index, updateMode }: Props) {
   const questionType = form.watch(`questions.${index}.questionType`);
 
   if (questionType !== "fill_in_blank") {
@@ -85,17 +86,20 @@ export function FillInBlanksOptions({ form, index }: Props) {
                   }}
                   className="flex-1"
                 />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeOption(index, blankIndex, form)}
-                  disabled={
-                    (form.watch(`questions.${index}.options`) || []).length <= 1
-                  }
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                {!updateMode && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeOption(index, blankIndex, form)}
+                    disabled={
+                      (form.watch(`questions.${index}.options`) || []).length <=
+                      1
+                    }
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
               <FormField
                 control={form.control}
@@ -121,15 +125,17 @@ export function FillInBlanksOptions({ form, index }: Props) {
       <FormDescription className="mb-4">
         Use {"{}"} in your question text to indicate where blanks should appear.
       </FormDescription>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        onClick={() => addBlank(index, form)}
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Add Blank
-      </Button>
+      {!updateMode && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => addBlank(index, form)}
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add Blank
+        </Button>
+      )}
     </>
   );
 }

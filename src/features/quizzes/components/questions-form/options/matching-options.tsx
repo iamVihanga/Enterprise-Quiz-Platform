@@ -12,6 +12,7 @@ import { addMatchingPair, removeOption } from "../utils";
 type Props = {
   form: UseFormReturn<QuestionFormValues, any, undefined>;
   index: number;
+  updateMode?: boolean;
 };
 
 // Define the matching pair type to use in type guards
@@ -21,7 +22,7 @@ interface MatchingPair {
   match: string;
 }
 
-export function MatchingOptions({ form, index }: Props) {
+export function MatchingOptions({ form, index, updateMode = false }: Props) {
   const questionType = form.watch(`questions.${index}.questionType`);
 
   if (questionType !== "matching") {
@@ -94,29 +95,33 @@ export function MatchingOptions({ form, index }: Props) {
                   }}
                   className="flex-1"
                 />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeOption(index, pairIndex, form)}
-                  disabled={options.length <= 2}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                {!updateMode && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeOption(index, pairIndex, form)}
+                    disabled={options.length <= 2}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
             </div>
           );
         })}
       </div>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        onClick={() => addMatchingPair(index, form)}
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Add Pair
-      </Button>
+      {!updateMode && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => addMatchingPair(index, form)}
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add Pair
+        </Button>
+      )}
     </>
   );
 }

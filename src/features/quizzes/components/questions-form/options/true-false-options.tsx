@@ -7,9 +7,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 type Props = {
   form: UseFormReturn<QuestionFormValues, any, undefined>;
   index: number;
+  updateMode?: boolean;
 };
 
-export function TrueFalseOptions({ form, index }: Props) {
+export function TrueFalseOptions({ form, index, updateMode = false }: Props) {
   if (form.watch(`questions.${index}.questionType`) === "true_false") {
     return (
       <div className="flex flex-col gap-3">

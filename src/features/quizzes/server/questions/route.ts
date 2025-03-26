@@ -20,7 +20,7 @@ const app = new Hono()
   .put(
     "/questions/:questionId",
     sessionMiddleware,
-    zValidator("form", updateQuestionSchema),
+    zValidator("json", updateQuestionSchema),
     async (c) => {
       try {
         const question_id = parseInt(c.req.param("questionId"));
@@ -46,7 +46,7 @@ const app = new Hono()
           );
         }
 
-        const validFormData = c.req.valid("form");
+        const validFormData = c.req.valid("json");
 
         // Update question
         const now = new Date();
@@ -80,7 +80,7 @@ const app = new Hono()
     zValidator("param", deleteQuestionSchema),
     async (c) => {
       try {
-        const question_id = parseInt(c.req.param("questionId"));
+        const question_id = c.req.param("questionId");
 
         if (!question_id) {
           return c.json({ error: "Question ID is required" }, 400);
@@ -107,7 +107,7 @@ const app = new Hono()
         // Delete question
         const deletedQuestion = await db
           .delete(questionsSchema)
-          .where(eq(questionsSchema.id, question_id))
+          .where(eq(questionsSchema.id, parseInt(question_id)))
           .returning();
 
         if (!deletedQuestion || deletedQuestion.length === 0) {
