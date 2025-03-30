@@ -7,10 +7,13 @@ import { db } from "@/db";
 import {
   quizzes as quizzesSchema,
   questions as questionsSchema,
+  quizToTag as quizToTagSchema,
+  quizTags as quizTagsSchema,
 } from "@/db/schema/index";
 
 import { sessionMiddleware } from "@/features/auth/middlewares/session-middleware";
 import { auth } from "@/lib/auth";
+
 import {
   addQuizSchema,
   updateQuizSchema,
@@ -20,6 +23,11 @@ import {
   addQuestionSchema,
   addMutltipleQuestionsSchema,
 } from "@/features/quizzes/schemas/zod-quiz-schema";
+import {
+  addTagToQuizSchema,
+  getTagsByQuizSchema,
+  removeTagSchema,
+} from "@/features/quizzes/schemas/quiz-tags-schema";
 
 type QueryParams = {
   page?: string;

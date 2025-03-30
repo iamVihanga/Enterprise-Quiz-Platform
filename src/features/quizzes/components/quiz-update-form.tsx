@@ -114,7 +114,7 @@ export function QuizUpdateForm({ data }: QuizUpdateFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Setup Quiz</CardTitle>
+        <CardTitle>Edit Details</CardTitle>
       </CardHeader>
 
       <Form {...form}>
