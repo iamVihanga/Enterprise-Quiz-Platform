@@ -81,7 +81,7 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
         roles: ["owner"],
       },
     ],
-    content: [
+    getContents: (isAdmin: boolean) => [
       {
         title: "Lessons",
         url: "/dashboard/lessons",
@@ -96,6 +96,20 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
         title: "Quizzes",
         url: "/dashboard/quizzes",
         icon: FileQuestionIcon,
+        items: [
+          {
+            title: "All Quizzes",
+            url: "/dashboard/quizzes",
+          },
+          ...(isAdmin
+            ? [
+                {
+                  title: "Categories",
+                  url: "/dashboard/quizzes/tags",
+                },
+              ]
+            : []),
+        ],
       },
     ],
     getSettings: (isAdmin: boolean) => [
@@ -131,7 +145,11 @@ export default function AppSidebarContent({ activeMember, session }: Props) {
         activeMemberRole={activeMember?.role || null}
       />
 
-      <NavContent items={data.content} />
+      <NavContent
+        items={data.getContents(
+          activeMember?.role === "owner" || activeMember?.role === "admin"
+        )}
+      />
 
       <NavSettings items={data.getSettings(session.user.role === "admin")} />
     </>

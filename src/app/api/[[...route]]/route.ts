@@ -10,6 +10,7 @@ import lessonsRoutes from "@/features/lessons/server/route";
 import materialsRoutes from "@/features/materials/server/route";
 import quizzesRoutes from "@/features/quizzes/server/route";
 import questionsRoutes from "@/features/quizzes/server/questions/route";
+import tagsRoutes from "@/features/tags/server/route";
 
 const app = new Hono().basePath("/api");
 
@@ -28,6 +29,7 @@ const routes = app
   .route("/materials", materialsRoutes)
   .route("/quizzes", quizzesRoutes)
   .route("/questions", questionsRoutes)
+  .route("/tags", tagsRoutes)
 
   // Admin Settings Routes
   .route("/users", userRoutes);
