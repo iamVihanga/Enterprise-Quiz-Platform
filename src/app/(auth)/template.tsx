@@ -15,7 +15,7 @@ type Props = {
 
 export default async function AuthLayout({ children }: Props) {
   const session = await auth.api.getSession({
-    headers: await headers(),
+    headers: await headers()
   });
 
   if (session) redirect("/dashboard");
@@ -25,8 +25,8 @@ export default async function AuthLayout({ children }: Props) {
       <Toaster theme="system" position="bottom-left" />
       <main className="h-screen grid md:grid-cols-4 lg:grid-cols-5 relative">
         <div className="relative hidden md:flex md:col-span-2 lg:col-span-3 w-full flex-col bg-muted p-10 text-primary-foreground">
-          <div className="w-full h-[30%] bg-gradient-to-t from-transparent to-black/50 absolute top-0 left-0 z-10" />
-          <div className="w-full h-[40%] bg-gradient-to-b from-transparent to-black/50 absolute bottom-0 left-0 z-10" />
+          <div className="w-full h-[60%] bg-gradient-to-t from-transparent to-black/80 absolute top-0 left-0 z-10" />
+          <div className="w-full h-[80%] bg-gradient-to-b from-transparent to-black/90 absolute bottom-0 left-0 z-10" />
 
           {/* Image Area */}
           <Image
@@ -37,16 +37,18 @@ export default async function AuthLayout({ children }: Props) {
           />
 
           <div className="relative z-20 items-center">
-            <Logo />
+            <Logo className="text-white" />
           </div>
           <div className="relative z-20 mt-auto">
-            <blockquote className="space-y-2 text-background">
-              <p className="text-lg">
+            <blockquote className="space-y-2">
+              <p className="text-base font-light text-white italic w-[80%]">
                 &ldquo;The ultimate quiz app for curious minds! Test your
                 knowledge, explore topics, and level up your learning.&rdquo;
               </p>
 
-              <footer className="text-sm">quizapp.com</footer>
+              <footer className="text-sm font-extralight text-white/60">
+                quizapp.com
+              </footer>
             </blockquote>
           </div>
         </div>

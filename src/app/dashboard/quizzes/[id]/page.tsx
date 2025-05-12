@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { quizzesAuthContext } from "@/features/quizzes/quizzes-auth-context";
 import { TagList } from "@/features/quizzes/components/tag-list";
+import { AdminView } from "./_views/admin";
 
 export default async function DashboardQuizPage() {
   const authContext = await quizzesAuthContext();
@@ -13,15 +14,7 @@ export default async function DashboardQuizPage() {
 
   if (authContext.activeMember?.role !== "member") {
     return (
-      <div>
-        {/* 
-            * In this page,
-    
-            - Admin: Can see the quiz analytics and users who enrolled, leaderboard
-        */}
-
-        <TagList activeOrganizationId={authContext.activeOrganization.id} />
-      </div>
+      <AdminView activeOrganizationId={authContext.activeOrganization.id} />
     );
   }
 

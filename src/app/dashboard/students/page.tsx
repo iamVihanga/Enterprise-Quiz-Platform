@@ -18,7 +18,7 @@ export default function StudentsPage() {
   const {
     data: activeOrgData,
     error: activeOrgErr,
-    isPending: activeOrgPending,
+    isPending: activeOrgPending
   } = authClient.useActiveOrganization();
 
   if (activeOrgPending) {
